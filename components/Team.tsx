@@ -6,7 +6,7 @@ const teamMembers = [
     name: 'Vinayak',
     role: 'Founder',
     description: 'Visionary leader driving Campus Hub\'s mission to empower students worldwide.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+    image: 'https://gentle-jade-frg5jvwgjg-n12eoo2huy.edgeone.app/%F0%9F%93%8C%CB%8A%CB%97%20by%20hazl_x.jpg',
     color: 'text-pinnacle-green'
   },
   {
