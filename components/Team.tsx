@@ -13,14 +13,14 @@ const teamMembers = [
     name: 'Shiven',
     role: 'Co-Founder & Graphics Lead',
     description: 'Creative genius responsible for our stunning visual identity and design excellence.',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop',
+    image: 'https://teammembers-1bs99bi7re.edgeone.dev/shiven.jpeg',
     color: 'text-pinnacle-orange'
   },
   {
     name: 'Saumil & Pratham',
     role: 'Designer & Lead Developer',
     description: 'Design experts ensuring every project meets the highest aesthetic standards.',
-    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop',
+    image: 'https://teammembers-1bs99bi7re.edgeone.dev/saumil%20and%20pratham.jpeg',
     color: 'text-pinnacle-purple'
   },
   {
