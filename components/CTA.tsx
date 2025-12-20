@@ -35,10 +35,10 @@ export const CTA: React.FC = () => {
 
            <p className="text-gray-400 mb-4">Start your journey with us today.</p>
            <a 
-             href="mailto:contact@campushub.com" 
+             href="mailto:Campushub13@gmail.com"
              className="text-2xl md:text-4xl font-bold hover:text-pinnacle-green transition-colors border-b-2 border-white/20 hover:border-pinnacle-green pb-2"
            >
-             Contact@campushub.com
+             Campushub13@gmail.com
            </a>
         </div>
 
