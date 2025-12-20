@@ -1,126 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-
-const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Portfolio', href: '#work' },
-];
+import React, { useState } from 'react';
+import { Menu, X, LogOut, User, LayoutDashboard, Settings, ChevronDown } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { UserAvatar } from './UserAvatar';
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { auth } from '../lib/firebase';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState('');
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+  const location = useLocation();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    // Time update
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
-      }).toLowerCase());
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 60000);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() || 0;
+    if (latest > previous && latest > 150) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+  });
+
+  const navItems = [
+    { label: 'ABOUT', href: '/#about' },
+    { label: 'SERVICES', href: '/#services' },
+    { label: 'PORTFOLIO', href: '/#work' },
+  ];
+
+  const handleNavClick = (href: string) => {
+    if (href.startsWith('/#')) {
+      setMobileMenuOpen(false);
+    }
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 p-4 md:pt-6 flex justify-center">
-      <div className="w-full max-w-[1200px] relative">
-        
-        {/* Main Pill Container */}
-        <div className="bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] px-4 py-3 md:px-8 md:py-4 flex items-center justify-between relative z-50">
-          
-          {/* Left Section: Nav Links (Desktop) / Menu Button (Mobile) */}
-          <div className="flex items-center w-1/4 md:w-1/3">
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navItems.map((item) => (
-                <a 
-                  key={item.label} 
-                  href={item.href}
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors uppercase tracking-wide"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            
-            {/* Mobile Menu Toggle */}
-            <button 
-              className="md:hidden p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
+    <motion.header
+      variants={{
+        visible: { y: 0 },
+        hidden: { y: "-100%" },
+      }}
+      animate={hidden ? "hidden" : "visible"}
+      transition={{ duration: 0.35, ease: "easeInOut" }}
+      className="fixed top-0 left-0 right-0 z-50 p-4 md:pt-6 flex justify-center"
+    >
+      <div className="bg-white rounded-full shadow-lg border border-gray-100 px-6 py-3 w-full max-w-5xl flex items-center justify-between pointer-events-auto">
+        {/* Left Nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="text-xs font-bold tracking-widest text-gray-500 hover:text-black transition-colors uppercase"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-
-          {/* Center Section: Logo */}
-          <div className="flex justify-center w-2/4 md:w-1/3 shrink-0">
-            <a href="#" className="relative group">
-              <span className="font-display font-extrabold text-2xl md:text-3xl tracking-tight uppercase text-black block transform group-hover:scale-105 transition-transform duration-300">
-                CampusHub
-              </span>
-              {/* Accent Square */}
-              <span className="absolute -top-1 -right-2 w-2 h-2 bg-pinnacle-green rounded-[1px]"></span>
+              {item.label}
             </a>
-          </div>
+          ))}
+        </nav>
 
-          {/* Right Section: Info & CTA */}
-          <div className="flex items-center justify-end gap-6 w-1/4 md:w-1/3">
-            <span className="hidden lg:block text-sm font-medium text-gray-500 tabular-nums tracking-tight">
-              Sleman, {currentTime}
-            </span>
-            
-            {/* Desktop/Tablet Contact Button */}
-            <a 
-              href="#contact" 
-              className="hidden md:inline-flex bg-black text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-gray-800 hover:scale-105 active:scale-95 transition-all duration-300 shadow-md"
-            >
-              Contact
-            </a>
-
-             {/* Mobile Contact Icon/Button (Mini version) */}
-             <a 
-              href="#contact" 
-              className="md:hidden bg-black text-white text-xs font-bold px-4 py-2 rounded-full"
-            >
-              Contact
-            </a>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Menu */}
-        <div 
-          className={`absolute top-full left-0 right-0 pt-4 transition-all duration-300 transform origin-top z-40 ${
-            mobileMenuOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
-          }`}
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 -ml-2 text-gray-600"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          <div className="bg-white rounded-3xl shadow-xl p-6 flex flex-col gap-4 border border-gray-100">
-             {navItems.map((item) => (
-                <a 
-                  key={item.label} 
-                  href={item.href}
-                  className="text-lg font-display font-bold uppercase text-center py-3 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ))}
-              <div className="border-t border-gray-100 pt-4 mt-2 flex justify-between items-center text-xs font-mono text-gray-500 px-4">
-                <span>Sleman, {currentTime}</span>
-                <span>v1.0</span>
-              </div>
-          </div>
-        </div>
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
 
+        {/* Logo */}
+        <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group">
+          <div className="flex items-center gap-2">
+            <span className="font-display font-bold text-2xl tracking-tighter group-hover:opacity-80 transition-opacity">
+              CAMPUS<span className="text-pinnacle-green">HUB</span>
+            </span>
+          </div>
+        </Link>
+        <div className="md:hidden w-6"></div> {/* Spacer for centering logo on mobile */}
+
+        {/* Right Nav */}
+        <div className="hidden md:flex items-center gap-6">
+          {/* Community Link */}
+          <Link
+            to="/community"
+            className={`text-xs font-bold tracking-widest transition-colors uppercase ${location.pathname === '/community' ? 'text-black' : 'text-gray-500 hover:text-black'}`}
+          >
+            Community
+          </Link>
+
+          {!user ? (
+            <a
+              href="#contact"
+              className="bg-black text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wide hover:bg-pinnacle-green hover:text-black transition-colors"
+            >
+              Contact
+            </a>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="flex items-center gap-2 focus:outline-none group"
+              >
+                <UserAvatar user={user} className="w-9 h-9 border-gray-100 group-hover:border-black transition-colors" />
+              </button>
+
+              <AnimatePresence>
+                {profileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden py-1 z-50"
+                  >
+                    <div className="px-4 py-3 border-b border-gray-50">
+                      <p className="text-sm font-bold text-gray-900 truncate">{user.displayName || 'User'}</p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    </div>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setProfileMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors"
+                    >
+                      <LayoutDashboard size={16} />
+                      Dashboard
+                    </Link>
+                    <button
+                      onClick={() => {
+                        auth.signOut();
+                        setProfileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                    >
+                      <LogOut size={16} />
+                      Log Out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
       </div>
-    </header>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute top-full left-4 right-4 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden p-6 flex flex-col gap-4 md:hidden"
+        >
+          {navItems.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => handleNavClick(item.href)}
+              className="text-sm font-bold text-gray-600 hover:text-black py-2 border-b border-gray-50 last:border-0"
+            >
+              {item.label}
+            </a>
+          ))}
+          <Link
+            to="/community"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-sm font-bold text-gray-600 hover:text-black py-2 border-b border-gray-50"
+          >
+            COMMUNITY
+          </Link>
+          <a
+            href="#contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-center bg-black text-white py-3 rounded-xl font-bold uppercase text-xs tracking-wide"
+          >
+            Contact Us
+          </a>
+        </motion.div>
+      )}
+    </motion.header>
   );
 };
