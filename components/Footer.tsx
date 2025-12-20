@@ -34,7 +34,7 @@ export const Footer: React.FC = () => {
            </div>
 
            <div className="col-span-2 md:col-span-1">
-              <h4 className="font-bold text-xl md:text-2xl tracking-tight">Contact@campushub.com</h4>
+              <h4 className="font-bold text-xl md:text-2xl tracking-tight">Campushub13@gmail.com</h4>
               <p className="mt-4 text-xs opacity-70 leading-relaxed max-w-[200px]">
                  The agency studio specializes in creative design and development for businesses.
               </p>
