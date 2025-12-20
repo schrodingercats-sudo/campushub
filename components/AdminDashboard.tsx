@@ -38,7 +38,7 @@ export const AdminDashboard = () => {
         const fetchAdmins = async () => {
             if (activeTab === 'settings') {
                 const querySnapshot = await getDocs(collection(db, "admins"));
-                const adminList = querySnapshot.docs.map(doc => doc.id);
+                const adminList = querySnapshot.docs.map((doc: any) => doc.id);
                 setAdmins(adminList);
             }
         };

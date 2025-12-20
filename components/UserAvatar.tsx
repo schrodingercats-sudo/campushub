@@ -13,7 +13,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({ user, className = "w-10 
         if (user.displayName) {
             return user.displayName
                 .split(' ')
-                .map(n => n[0])
+                .map((n: string) => n[0])
                 .join('')
                 .substring(0, 2)
                 .toUpperCase();

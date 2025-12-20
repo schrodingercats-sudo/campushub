@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, DocumentSnapshot } from 'firebase/firestore';
 
 interface AuthContextType {
     user: User | null;
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 // Background: Ensure they exist in DB (don't await)
                 const adminRef = doc(db, 'admins', currentUser.email);
-                getDoc(adminRef).then(snap => {
+                getDoc(adminRef).then((snap: DocumentSnapshot) => {
                     if (!snap.exists()) {
                         setDoc(adminRef, {
                             email: currentUser.email!,
