@@ -9,6 +9,7 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { Login } from './components/Login';
 import { UserDashboard } from './components/UserDashboard';
 import { ContactUs } from './components/ContactUs';
+import { Redeem } from './components/Redeem';
 import { DataProvider } from './context/DataContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Loader2 } from 'lucide-react';
@@ -74,6 +75,7 @@ function App() {
               <Route path="/community" element={<Community />} />
               <Route path="/project/:id" element={<ProjectDetails />} />
               <Route path="/contact" element={<ContactUs />} />
+              <Route path="/redeem" element={<Redeem />} />
             </Route>
           </Routes>
         </Router>
